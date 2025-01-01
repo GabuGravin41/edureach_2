@@ -186,13 +186,14 @@ LOGIN_REDIRECT_URL = "/accounts/email/"
 
 
 
+
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
         "APP": {
-            "client_id": config("DJANGO_GOOGLE_CLIENT_ID", default=""),
-            "secret": config("DJANGO_GOOGLE_SECRET", default=""),
-            "key": config("DJANGO_GOOGLE_KEY", default=""),
+            "client_id": "563944583075-0t58n6ghe5n0d1c4s1vrbknaj5eghu1s.apps.googleusercontent.com",
+            "secret": "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",
+            "key": "",
         }
     },
 }

@@ -6,7 +6,11 @@ module.exports = {
     './core/templates/**/*.{html,js}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ['Arial', 'sans-serif'],
+      },
+    },
   },
   plugins: [
     daisyui

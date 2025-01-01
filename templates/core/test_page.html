@@ -1,0 +1,86 @@
+{% load static %}
+
+{% block header%}
+  <link rel="stylesheet" href="{% static 'css/core/test_page.css' %}">
+{%endblock%}
+
+{% block body %}
+
+<body>
+    <header>
+        <h1>Test Page</h1>
+        <nav>
+            <a href="/">Home</a>
+            <a href="test.html">another link</a>
+            <a href="create_account.html">another link</a>
+        </nav>
+    </header>
+    <main>
+        <div class="test-instructions">
+            <h2>Instructions</h2>
+            <p>Welcome to the test page. Answer the following questions and submit your answers to check your score.</p>
+        </div>
+        <div id="questions-container">
+            <!-- Questions will be dynamically loaded here -->
+        </div>
+        <div class="test-actions">
+            <button id="submit-test">Submit Test</button>
+            <p id="score-display"></p>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2024 EduReach</p>
+    </footer>
+    
+    <!-- <script src="js/core/test_page.js"></script> -->
+    <script>
+        // script.js
+        document.addEventListener('DOMContentLoaded', () => {
+            const questionsContainer = document.getElementById('questions-container');
+            const scoreDisplay = document.getElementById('score-display');
+        
+            // Fetch questions from the API
+            fetch('/api/questions/')
+                .then(response => response.json())
+                .then(questions => {
+                    // Render questions dynamically
+                    questions.forEach(q => {
+                        const questionElem = document.createElement('div');
+                        questionElem.classList.add('question');
+                        questionElem.innerHTML = `
+                            <h3>Question ${q.id}</h3>
+                            <p>${q.question}</p>
+                            <input type="text" id="answer-${q.id}" placeholder="Type your answer here">
+                            <button onclick="toggleSolution('solution-${q.id}')">Show Solution</button>
+                            <div id="solution-${q.id}" class="solution">${q.solution}</div>
+                        `;
+                        questionsContainer.appendChild(questionElem);
+                    });
+                })
+                .catch(error => console.error('Error fetching questions:', error));
+        
+            // Toggle solutions
+            window.toggleSolution = (id) => {
+                const element = document.getElementById(id);
+                element.style.display = element.style.display === 'none' ? 'block' : 'none';
+            };
+        
+            // Submit Test
+            document.getElementById('submit-test').addEventListener('click', () => {
+                const inputs = document.querySelectorAll('input[type="text"]');
+                let score = 0;
+        
+                inputs.forEach(input => {
+                    const questionId = input.id.split('-')[1];
+                    const correctAnswer = questions.find(q => q.id == questionId).correctAnswer;
+                    if (input.value.trim().toLowerCase() === correctAnswer.toLowerCase()) {
+                        score++;
+                    }
+                });
+        
+                scoreDisplay.textContent = `Your Score: ${score}/${questions.length}`;
+            });
+        });
+    </script>
+</body>
+{% endblock%}
